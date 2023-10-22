@@ -11,6 +11,25 @@ end:
     b end
 
 kernel_entry:
+    mrs x0, currentel
+    lsr x0, x0, #2
+    cmp x0, #2
+    bne end
+
+    msr sctlr_el1, xzr
+    mov x0, #(1 << 31)
+    msr hcr_el2, x0
+
+    mov x0, #0b1111000101
+    msr spsr_el2, x0
+    adr x0, el1_entry
+    msr elr_el2, x0
+
+    eret
+
+el1_entry:
+
+
     mov sp, #0x80000
 
     ldr x0, =bss_start
