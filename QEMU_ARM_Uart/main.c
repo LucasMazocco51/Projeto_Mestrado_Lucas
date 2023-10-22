@@ -1,5 +1,6 @@
 #include "uart.h"
 #include "print.h"
+#include "debug.h"
 
 void KMain(void)
 {
@@ -8,10 +9,9 @@ void KMain(void)
     uint64_t value_uint = 20;
 
     printk("Hello, Rasp\r\n");
-    printk("Test number dec negativo %d\r\n",value_int);
-    printk("Test number dec pos %u\r\n",value_uint);
-    printk("Test number hex %x\r\n", value_uint);
 
+    ASSERT(0);
+    
     while (1) {
         ;
     }
