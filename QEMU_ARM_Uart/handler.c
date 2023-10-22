@@ -30,7 +30,7 @@ void init_timer(void)
     out_word(CNTP_EL0, (1<< 1));
 }
 
-static void timer_interrupt_handler(void)
+static void timer_interrupt_handler(uint64_t spsr)
 {
     uint32_t status = read_timer_status();
 
@@ -39,7 +39,7 @@ static void timer_interrupt_handler(void)
         ticks++;
         if (ticks % 100 == 0)
         {
-            printk("timer %d \r\n",ticks);
+            printk("timer %d %x\r\n",ticks,spsr);
         }
         set_timer_interval(timer_interval);
     }
@@ -69,7 +69,7 @@ void handler(uint64_t numid, uint64_t esr, uint64_t elr)
         irq = in_word(CNTP_STATUS_EL0);
         if (irq & (1<<1))                   //verifica se o bit da interrupção está ativo
         {
-            timer_interrupt_handler();      //chama a função de interrup
+            timer_interrupt_handler(esr);      //chama a função de interrup
         }
         else
         {   
