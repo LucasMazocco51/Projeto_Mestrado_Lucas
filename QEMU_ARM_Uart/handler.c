@@ -2,6 +2,7 @@
 #include "print.h"
 #include "lib.h"
 #include "irq.h"
+#include "uart.h"
 
 void enable_timer(void);
 uint32_t read_timer_status(void);
@@ -10,6 +11,17 @@ uint32_t read_timer_freq(void);
 
 static uint32_t timer_interval = 0;
 static uint64_t ticks = 0;
+
+void init_interrupt_controller(void)
+{
+    //desativa todas interrupções
+    out_word(DISABLE_BASIC_IRQS, 0xfffffff);
+    out_word(DISABLE_IRQS_1, 0xfffffff);
+    out_word(DISABLE_IRQS_2, 0xfffffff);
+
+    //seta o interrupt numero 57 -> uart irq
+    out_word(ENABLE_IRQS_2, (1 << 25));
+}
 
 void init_timer(void)
 {
@@ -34,6 +46,13 @@ static void timer_interrupt_handler(void)
 
 
 }
+
+static uint32_t get_irq_number(void)
+{
+    return in_word(IRQ_BASIC_PENDING);
+}
+
+
 void handler(uint64_t numid, uint64_t esr, uint64_t elr)
 {
     uint32_t irq;
@@ -53,8 +72,17 @@ void handler(uint64_t numid, uint64_t esr, uint64_t elr)
             timer_interrupt_handler();      //chama a função de interrup
         }
         else
-        {
-            printk("unknow irq\r\n");
+        {   
+            irq = get_irq_number();
+            //verifica se a interrupt é da uart -> documentação
+            if (irq & (1<<19))
+            {
+                uart_handler();
+            }
+            else
+            {
+                printk("unknow irq\r\n");
+            }  
         }
         break;
     
