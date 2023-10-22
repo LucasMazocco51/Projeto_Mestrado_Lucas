@@ -12,7 +12,7 @@ void KMain(void)
     printk("Hello, Rasp\r\n");
     printk("We are at EL %u\r\n", (uint64_t)get_el());
 
-    //ASSERT(0);
+
 
     while (1) {
         ;

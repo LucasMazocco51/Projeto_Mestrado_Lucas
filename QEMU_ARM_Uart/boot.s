@@ -22,14 +22,13 @@ kernel_entry:
 
     mov x0, #0b1111000101
     msr spsr_el2, x0
+
     adr x0, el1_entry
     msr elr_el2, x0
 
     eret
 
 el1_entry:
-
-
     mov sp, #0x80000
 
     ldr x0, =bss_start
@@ -38,6 +37,9 @@ el1_entry:
     mov x1, #0
     bl memset
 
+    ldr x0, =vector_table
+    msr vbar_el1, x0
+    
     bl KMain
     b end
     
