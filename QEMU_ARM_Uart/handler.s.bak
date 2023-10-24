@@ -92,7 +92,7 @@ sync_handler:
     str x30, [sp, #(16 * 15)]
 
     mov x0, #1
-    mrs x1, esr_el1
+    mrs x1, spsr_el1//esr_el1
     mrs x2, elr_el1
     bl handler
 
@@ -136,7 +136,7 @@ irq_handler:
     str x30, [sp, #(16 * 15)]
 
     mov x0, #2
-    mrs x1, esr_el1
+    mrs x1, spsr_el1//esr_el1
     mrs x2, elr_el1
     bl handler
 

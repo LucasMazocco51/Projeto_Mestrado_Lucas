@@ -1,7 +1,9 @@
 #ifndef _UART_H
 #define _UART_H
+#include "memory.h"
 
-#define IO_BASE_ADDR    0x3f200000
+//P2V converte de physical address to virtual addres
+#define IO_BASE_ADDR    P2V(0x3f200000)
 
 #define UART0_DR        IO_BASE_ADDR + 0x1000
 #define UART0_FR        IO_BASE_ADDR + 0x1018
