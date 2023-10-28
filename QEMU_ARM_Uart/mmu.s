@@ -9,7 +9,14 @@
 .global enable_mmu
 .global setup_vm
 
+load_pgd:
+    msr ttbr0_el1, x0
+    tlbi vmallelis
+    dsb ish
+    isb 
 
+    ret
+    
 enable_mmu:
     adr x0, pgd_ttbr1
     msr ttbr1_el1, x0
